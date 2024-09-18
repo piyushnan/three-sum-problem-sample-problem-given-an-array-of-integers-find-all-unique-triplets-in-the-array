@@ -1,0 +1,69 @@
+
+#include <bits/stdc++.h>
+using namespace std;
+
+// Function to find pairs with a given sum using sorting
+//  and two-pointer approach, similar to "2SUM problem" approach
+vector<vector<int>> findPairs(vector<int>& arr, int start,
+                              int target, int firstEle) {
+    vector<vector<int>> result;
+    vector<int> sortedArr(arr.begin() + start, arr.end());
+    sort(sortedArr.begin(), sortedArr.end());
+
+    int l = 0, r = sortedArr.size() - 1;
+
+    // Use two pointers to find pairs that sum up to the target
+    while (l < r) {
+        int sum = sortedArr[l] + sortedArr[r];
+
+        if (sum == target) {
+            // Add the triplet to the result
+            result.push_back({firstEle,
+                              sortedArr[l], sortedArr[r]});
+            ++l;
+            --r;
+        } else if (sum < target) {
+            ++l; // Move l pointer to the right
+        } else {
+            --r; // Move r pointer to the left
+        }
+    }
+
+    return result;
+}
+
+// Function to find all triplets in the array that sum to 0
+vector<vector<int>> findTriplets(vector<int>& arr) {
+    vector<vector<int>> result;
+
+    // Iterate through the array to use 2 Sum in a loop
+    for (int i = 0; i < arr.size() - 1; ++i) {
+        // Remaining sum for two sum
+        int target = -arr[i];
+
+        // Find pairs in arr[i+1..n-1] with sum equal to target
+        vector<vector<int>> pairs =
+          findPairs(arr, i + 1, target, arr[i]);
+
+        // Append found pairs to the result
+        result.insert(result.end(), pairs.begin(), pairs.end());
+    }
+
+    return result;
+}
+
+int main() {
+    vector<int> arr = {0, -1, 2, -3, 1};
+    vector<vector<int>> result = findTriplets(arr);
+
+    if (result.empty()) {
+        cout << "No Triplet Found" << endl;
+    } else {
+        // Print each triplet
+        for (const auto& t : result) {
+            cout << t[0] << " "<< t[1] << " "<< t[2] << endl;
+        }
+    }
+
+    return 0;
+}
